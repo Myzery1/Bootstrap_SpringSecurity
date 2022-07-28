@@ -17,13 +17,11 @@ import java.util.*;
 @Controller
 public class AdminController {
     private final UserServiceImp userService;
-    final UserRepository userRepository;
-    final RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    public AdminController(UserServiceImp userService, UserRepository userRepository, RoleRepository roleRepository) {
+    private AdminController(UserServiceImp userService, RoleRepository roleRepository) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
 
@@ -36,7 +34,7 @@ public class AdminController {
         return "list_users";
     }
 
-    @RequestMapping(value="/admin/update",method = {RequestMethod.POST, RequestMethod.GET})
+    @PostMapping(value="/admin/update")
     public String update(User user,@RequestParam(value = "role") String[] roles){
         user.setRoles(getRoles(roles));
         userService.saveUser(user);
@@ -60,13 +58,13 @@ public class AdminController {
         return "redirect:/admin/";
     }
 
-    @PostMapping("/admin/remove/{id}")
+    @DeleteMapping("/admin/remove/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
         return "redirect:/admin/";
     }
 
-    public Set<Role> getRoles(String[] roles) {
+    private Set<Role> getRoles(String[] roles) {
         Set<Role> roleSet = new HashSet<>();
         for (String role : roles) {
             roleSet.add(roleRepository.findByName(role));

@@ -21,13 +21,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
 
-    final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    final RoleRepository roleRepository;
-
-    public UserServiceImp(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -35,11 +32,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
         return userRepository.findAll();
     }
 
-    // поменять булиан на войд
     @Override
-    public boolean saveUser(User user) {
+    public void saveUser(User user) {
         userRepository.save(user);
-        return true;
     }
 
     @Override
